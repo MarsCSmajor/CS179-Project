@@ -32,7 +32,7 @@ credential.pack()
 credential_entry = tk.Entry(window)
 credential_entry.pack()
 
-button = tk.Button(window,text="Login",command=validation())
+button = tk.Button(window,text="Login",command=validation)
 button.pack()
 
 
