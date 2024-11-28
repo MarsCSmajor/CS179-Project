@@ -1,6 +1,12 @@
 import tkinter as tk
+#https://docs.python.org/3/library/dialog.html#
 
 from tkinter import messagebox
+
+from tkinter.filedialog import askopenfilename
+
+
+
 
 root = tk.Tk()
 
@@ -25,7 +31,7 @@ def credentials_tab():
         if username.get() in dataset: 
             upload_manifest_tab()
         else: 
-            messagebox.showerror("Login Failed")
+            messagebox.showerror("Login Failed","invalid credentials")
 
     
 
@@ -34,8 +40,22 @@ def credentials_tab():
 
 
 
+def open_manifest(): 
+
+    global manifest_file # Manifest file can be access anywhere in the program since is global
+
+    path = askopenfilename(filetypes=[("Text Files", "*.txt")])
+    with open(path, 'r') as m:
+        manifest_file = m.read()
+    messagebox.showinfo("Manifest File", manifest_file)
+
+    main_menu_tab()
+        
+  
+
+
+
 def upload_manifest_tab():
-    
     credential.destroy()
     button.destroy()
     username.destroy()
@@ -43,11 +63,13 @@ def upload_manifest_tab():
     global upload_manifest
     global button2
 
+
+
     upload_manifest = tk.Label(root, text="Upload manifest")
     upload_manifest.pack()
 
-    button2 = tk.Button(root,text="upload",command=main_menu_tab)
-    button2.pack()
+    button2 = tk.Button(root,text="UPLOAD",command=open_manifest,height=10,width=40)
+    button2.pack(expand=True)
 
 
 
@@ -63,11 +85,11 @@ def main_menu_tab():
     msg = tk.Label(root,text="Choose a task")
     msg.pack()
 
-    Balance = tk.Button(root, text="Balance",command=Balance_tab,height=30,width=30,fg="blue",background="gray")
+    Balance = tk.Button(root, text="Balance",command=Balance_tab,height=20,width=40,fg="blue",background="gray")
     Balance.pack(side="left",expand=True)
     
     
-    Load_unload = tk.Button(root, text="Load / Unload",command=Load_unload_tab,height=30,width=30,fg = "red", background="gray")
+    Load_unload = tk.Button(root, text="Load / Unload",command=Load_unload_tab,height=20,width=40,fg = "red", background="gray")
     Load_unload.pack(side = "right",expand=True)
 
 
@@ -86,14 +108,13 @@ def Load_unload_tab():
     
 
 
+
+
+
+
 credentials_tab()
-
-
-
-
-
-
 root.title("Fragile Express")
 root.geometry("1024x768")
+root.configure(background="lightblue")
 
 root.mainloop()
