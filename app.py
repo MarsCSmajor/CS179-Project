@@ -66,7 +66,7 @@ def modify_manifest(action):
                 break
         for i, line in enumerate(manifest_lines):
             if "[02,03]" in line and current_data:
-                manifest_lines[i] = f"[02,03], {current_data[0]}, {current_data[1]}\n"
+                manifest_lines[i] = f"[02,03], {current_data[1]}, {current_data[2]}\n"
                 break
 
     elif action == "move_02_03_to_01_01":
