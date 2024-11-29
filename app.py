@@ -79,7 +79,7 @@ def modify_manifest(action):
                 break
         for i, line in enumerate(manifest_lines):
             if "[01,01]" in line and current_data:
-                manifest_lines[i] = f"[01,01], {current_data[0].strip()}, {current_data[1].strip()}\n"
+                manifest_lines[i] = f"[01,01], {current_data[1].strip()}, {current_data[2].strip()}\n"
                 break
 
     elif action == "export_manifest":
