@@ -1,7 +1,6 @@
 # Right now this code can import and export manifest (meanwhile deleting)
 # This code also uses brute force appraoch to access/transfer container content
 # TODO:
-# Fix the transfer functionality from one container to another
 # Use more efficient logic to read from manifest and transfer container
 # Display instruction for operator to follow
 
