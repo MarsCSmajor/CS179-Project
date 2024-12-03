@@ -105,7 +105,6 @@ def main_menu_tab():
 
 def Balance_tab():
 
-    global rr
     global file
     global button3
     global timer_label
@@ -119,7 +118,9 @@ def Balance_tab():
     timer_label.pack()
 
     file = load_manifest(path)
+
     def GUI():
+        global rr
 
         rr = tk.Frame(root)
         rr.pack(anchor="n",expand=True)
@@ -141,6 +142,9 @@ def Balance_tab():
     button3.pack(expand=True,side="top")
 
 
+    #Load_unload_tab()
+
+
 
 
     
@@ -150,6 +154,13 @@ def Balance_tab():
 
 
 def Load_unload_tab():
+    timer_label.destroy()
+    button3.destroy()
+    rr.destroy()
+
+    
+
+    
     t= 0
 
     
