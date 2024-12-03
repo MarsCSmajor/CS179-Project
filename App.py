@@ -115,25 +115,31 @@ def Balance_tab():
     timer_label.pack()
 
     file = load_manifest(path)
-    b ="red"
+    
     def GUI():
         global rr
+
+        color = "white"
         
-        rows = 8
         rr = tk.Frame(root)
         rr.pack(anchor="n",expand=True)
+        rows = 8
         while rows > 0:
             for k in range(12):
                 v = tk.StringVar()
-                #message = tk.Message(rr,relief="raised",width=100,textvariable=v)
+                
                 if rows == 8:
-
-                    
-                    v.set(file["Position"][k])#file["Weight"][k]+file["Container"][k])
+                    if file["Container"][k] == "NAN":
+                        color = "gray"
+                    v.set(file["Position"][k] + "\n" + file["Weight"][k]+"\n"+file["Container"][k])
                 else:
+                    if file["Container"][(8-rows)*12+k] == "NAN":
+                        color = "gray"
                     
-                    v.set(file["Position"][(8-rows)*12+k])#file["Weight"][12*i + k]+file["Container"][12*i+k])
-                message = tk.Message(rr,relief="raised",width=100,textvariable=v)
+                    v.set(file["Position"][(8-rows)*12+k]+"\n"+ file["Weight"][(8-rows)*12+k]+"\n"+file["Container"][(8-rows)*12+k])
+                message = tk.Message(rr,relief="raised",width=100,textvariable=v,bg=color)
+
+                color = "white"
 
                 message.grid(row=rows,column=k,padx=10,pady=10)
             rows-=1
