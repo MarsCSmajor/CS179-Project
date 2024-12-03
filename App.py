@@ -6,7 +6,7 @@ from tkinter.filedialog import askopenfilename
 from _new_balance_alg import process_manifest,load_manifest
 
 #https://docs.python.org/3/library/dialog.html#
-
+# For login, reference https://www.w3resource.com/python-exercises/tkinter/python-tkinter-basic-exercise-16.phpx
 
 
 
@@ -29,7 +29,7 @@ def credentials_tab():
     username = tk.Entry(root)
     username.pack()
     
-    # For login, reference https://www.w3resource.com/python-exercises/tkinter/python-tkinter-basic-exercise-16.phpx
+    
     def login():
         if username.get() in dataset: 
             upload_manifest_tab()
@@ -120,37 +120,45 @@ def Balance_tab():
     def GUI():
         global rr
 
-        color = "white"
+        
         
         rr = tk.Frame(root)
         rr.pack(anchor="n",expand=True)
         rows = 8
-        while rows > 0:
+
+        while rows > 0: 
             for k in range(12):
                 v = tk.StringVar()
-                
+
                 if rows == 8:
                     if file["Container"][k] == "NAN":
                         color = "gray"
-
+                    
+                    
                     if file["Container"][k] != "NAN" and file["Container"][k] != "UNUSED":
                         color = "green"
-
-                    v.set(file["Position"][k] + "\n" + file["Weight"][k]+"\n"+file["Container"][k])
-                else:
+                    
+                    v.set(file["Position"][k]+"\n"+file["Weight"][k] + "\n"+file["Container"][k])
+                
+                else: 
                     if file["Container"][(8-rows)*12+k] == "NAN":
                         color = "gray"
-                    
-                    if file["Container"][(8-rows)*12+k] != "NAN" and file["Container"][(8-rows)*12+k] != "UNUSED":
+
+                    if file["Container"][(8-rows)*12+k] != "NAN" and file["Container"][(8-rows)*12+k] !="UNUSED":
                         color = "green"
                     
-                    v.set(file["Position"][(8-rows)*12+k]+"\n"+ file["Weight"][(8-rows)*12+k]+"\n"+file["Container"][(8-rows)*12+k])
+                    v.set(file["Position"][(8-rows)*12+k]+"\n"+file["Weight"][(8-rows)*12+k] + "\n"+file["Container"][(8-rows)*12+k])
+                    
+                    
+            
+                
                 message = tk.Message(rr,relief="raised",width=100,textvariable=v,bg=color)
-
                 color = "white"
+                message.grid(padx=10,pady=10,row=rows,column=k)
 
-                message.grid(row=rows,column=k,padx=10,pady=10)
             rows-=1
+
+        
 
     GUI()
 
