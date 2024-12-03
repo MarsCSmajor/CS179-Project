@@ -1,4 +1,10 @@
 import tkinter as tk
+import pandas as pd
+from itertools import combinations
+
+from _new_balance_alg import process_manifest
+from _new_balance_alg import load_manifest
+
 #https://docs.python.org/3/library/dialog.html#
 
 from tkinter import messagebox
@@ -10,7 +16,8 @@ from tkinter.filedialog import askopenfilename
 
 root = tk.Tk()
 
-dataset = ["root"]
+#dataset = ["root"]
+dataset = [""]
 
 def credentials_tab():
 
@@ -43,9 +50,10 @@ def credentials_tab():
 def open_manifest(): 
 
     global manifest_file # Manifest file can be access anywhere in the program since is global
-
+    global path
     path = askopenfilename(filetypes=[("Text Files", "*.txt")])
     with open(path, 'r') as m:
+        
         manifest_file = m.read()
     messagebox.showinfo("Manifest File", manifest_file)
 
@@ -97,9 +105,48 @@ def main_menu_tab():
 
 def Balance_tab():
 
+    global rr
+    global file
+    global button3
+    global timer_label
     msg.destroy()
     Balance.destroy()
     Load_unload.destroy()
+
+
+
+    timer_label = tk.Label(root, text="estimated time remanining",padx=10,pady=5)
+    timer_label.pack()
+
+    file = load_manifest(path)
+    def GUI():
+
+        rr = tk.Frame(root)
+        rr.pack(anchor="n",expand=True)
+        for i in range(8):
+            for k in range(12):
+                v = tk.StringVar()
+                message = tk.Message(rr,relief="raised",width=100,textvariable=v)
+                if k !=12 and i == 0:
+                    v.set(file["Weight"][k]+file["Container"][k])
+                else:
+                    v.set(file["Weight"][12*i + k]+file["Container"][12*i+k])
+                
+
+                message.grid(row=i,column=k,padx=10,pady=10)
+
+    GUI()
+
+    button3 = tk.Button(root,text="continue",height=5,width=15)
+    button3.pack(expand=True,side="top")
+
+
+
+
+    
+
+    
+
 
 
 def Load_unload_tab():
