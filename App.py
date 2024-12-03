@@ -115,23 +115,28 @@ def Balance_tab():
     timer_label.pack()
 
     file = load_manifest(path)
-
+    b ="red"
     def GUI():
         global rr
-
+        
+        rows = 8
         rr = tk.Frame(root)
         rr.pack(anchor="n",expand=True)
-        for i in range(8):
+        while rows > 0:
             for k in range(12):
                 v = tk.StringVar()
-                message = tk.Message(rr,relief="raised",width=100,textvariable=v)
-                if k !=12 and i == 0:
-                    v.set(file["Weight"][k]+file["Container"][k])
-                else:
-                    v.set(file["Weight"][12*i + k]+file["Container"][12*i+k])
-                
+                #message = tk.Message(rr,relief="raised",width=100,textvariable=v)
+                if rows == 8:
 
-                message.grid(row=i,column=k,padx=10,pady=10)
+                    
+                    v.set(file["Position"][k])#file["Weight"][k]+file["Container"][k])
+                else:
+                    
+                    v.set(file["Position"][(8-rows)*12+k])#file["Weight"][12*i + k]+file["Container"][12*i+k])
+                message = tk.Message(rr,relief="raised",width=100,textvariable=v)
+
+                message.grid(row=rows,column=k,padx=10,pady=10)
+            rows-=1
 
     GUI()
 
