@@ -1,6 +1,5 @@
-# The main App for our project. This handles page shifts and direct calls for certain features like balance and load/unload
+# The main App for our project. This handles page shifts and direct calls for certain features like balance and load/unload,etc
 import tkinter as tk
-import pandas as pd
 from itertools import combinations
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename
