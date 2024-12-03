@@ -1,15 +1,12 @@
+# The main App for our project. This handles page shifts and direct calls for certain features like balance and load/unload
 import tkinter as tk
 import pandas as pd
 from itertools import combinations
-
-from _new_balance_alg import process_manifest
-from _new_balance_alg import load_manifest
+from tkinter import messagebox
+from tkinter.filedialog import askopenfilename
+from _new_balance_alg import process_manifest,load_manifest
 
 #https://docs.python.org/3/library/dialog.html#
-
-from tkinter import messagebox
-
-from tkinter.filedialog import askopenfilename
 
 
 
