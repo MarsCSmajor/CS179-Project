@@ -109,10 +109,12 @@ def Balance_tab():
     Balance.destroy()
     Load_unload.destroy()
 
-
+    messagebox.showinfo("Info","Ready to balance")
 
     timer_label = tk.Label(root, text="estimated time remanining",padx=10,pady=5)
     timer_label.pack()
+
+    
 
     file = load_manifest(path)
     
@@ -131,10 +133,17 @@ def Balance_tab():
                 if rows == 8:
                     if file["Container"][k] == "NAN":
                         color = "gray"
+
+                    if file["Container"][k] != "NAN" and file["Container"][k] != "UNUSED":
+                        color = "green"
+
                     v.set(file["Position"][k] + "\n" + file["Weight"][k]+"\n"+file["Container"][k])
                 else:
                     if file["Container"][(8-rows)*12+k] == "NAN":
                         color = "gray"
+                    
+                    if file["Container"][(8-rows)*12+k] != "NAN" and file["Container"][(8-rows)*12+k] != "UNUSED":
+                        color = "green"
                     
                     v.set(file["Position"][(8-rows)*12+k]+"\n"+ file["Weight"][(8-rows)*12+k]+"\n"+file["Container"][(8-rows)*12+k])
                 message = tk.Message(rr,relief="raised",width=100,textvariable=v,bg=color)
