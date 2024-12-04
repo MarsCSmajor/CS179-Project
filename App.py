@@ -52,12 +52,9 @@ def open_manifest():
     with open(path, 'r') as m:
         
         manifest_file = m.read()
-    messagebox.showinfo("Manifest File", manifest_file)
+    # messagebox.showinfo("Manifest File", manifest_file)
 
     main_menu_tab()
-        
-  
-
 
 
 def upload_manifest_tab():
@@ -97,8 +94,42 @@ def main_menu_tab():
     Load_unload = tk.Button(root, text="Load / Unload",command=Load_unload_tab,height=20,width=40,fg = "red", background="gray")
     Load_unload.pack(side = "right",expand=True)
 
+def GUI():
+    global rr
 
+    color = "white"
 
+    rr = tk.Frame(root)
+    rr.pack(anchor="n", expand=True)
+    rows = 8
+    while rows > 0:
+        for k in range(12):
+            v = tk.StringVar()
+
+            if rows == 8:
+                if file["Container"][k] == "NAN":
+                    color = "gray"
+
+                if file["Container"][k] != "NAN" and file["Container"][k] != "UNUSED":
+                    color = "green"
+
+                v.set(file["Position"][k] + "\n" + file["Weight"][k] + "\n" + file["Container"][k])
+            else:
+                if file["Container"][(8 - rows) * 12 + k] == "NAN":
+                    color = "gray"
+
+                if file["Container"][(8 - rows) * 12 + k] != "NAN" and file["Container"][
+                    (8 - rows) * 12 + k] != "UNUSED":
+                    color = "green"
+
+                v.set(file["Position"][(8 - rows) * 12 + k] + "\n" + file["Weight"][(8 - rows) * 12 + k] + "\n" +
+                      file["Container"][(8 - rows) * 12 + k])
+            message = tk.Message(rr, relief="raised", width=100, textvariable=v, bg=color)
+
+            color = "white"
+
+            message.grid(row=rows, column=k, padx=10, pady=10)
+        rows -= 1
 
 def Balance_tab():
 
@@ -114,44 +145,7 @@ def Balance_tab():
     timer_label = tk.Label(root, text="estimated time remanining",padx=10,pady=5)
     timer_label.pack()
 
-    
-
     file = load_manifest(path)
-    
-    def GUI():
-        global rr
-
-        color = "white"
-        
-        rr = tk.Frame(root)
-        rr.pack(anchor="n",expand=True)
-        rows = 8
-        while rows > 0:
-            for k in range(12):
-                v = tk.StringVar()
-                
-                if rows == 8:
-                    if file["Container"][k] == "NAN":
-                        color = "gray"
-
-                    if file["Container"][k] != "NAN" and file["Container"][k] != "UNUSED":
-                        color = "green"
-
-                    v.set(file["Position"][k] + "\n" + file["Weight"][k]+"\n"+file["Container"][k])
-                else:
-                    if file["Container"][(8-rows)*12+k] == "NAN":
-                        color = "gray"
-                    
-                    if file["Container"][(8-rows)*12+k] != "NAN" and file["Container"][(8-rows)*12+k] != "UNUSED":
-                        color = "green"
-                    
-                    v.set(file["Position"][(8-rows)*12+k]+"\n"+ file["Weight"][(8-rows)*12+k]+"\n"+file["Container"][(8-rows)*12+k])
-                message = tk.Message(rr,relief="raised",width=100,textvariable=v,bg=color)
-
-                color = "white"
-
-                message.grid(row=rows,column=k,padx=10,pady=10)
-            rows-=1
 
     GUI()
 
@@ -159,33 +153,96 @@ def Balance_tab():
     button3.pack(expand=True,side="top")
 
 
+
+
     #Load_unload_tab()
 
-
-
-
-    
-
-    
-
-
-
 def Load_unload_tab():
-    timer_label.destroy()
-    button3.destroy()
-    rr.destroy()
+    global file
+    global button3
+    global timer_label
+    msg.destroy()
+    Balance.destroy()
+    Load_unload.destroy()
 
-    
+    messagebox.showinfo("Info", "Ready to load/unload")
 
-    
-    t= 0
+    timer_label = tk.Label(root, text="estimated time remaining", padx=10, pady=5)
+    timer_label.pack()
 
-    
+    file = load_manifest(path)
+    GUI()
 
+    user_action_label = tk.Label(root, text="Enter 'load' to load a container or 'unload' to unload a container:")
+    user_action_label.pack()
+    user_action_entry = tk.Entry(root)
+    user_action_entry.pack()
 
+    def handle_action():
+        user_action = user_action_entry.get().lower()
+        if user_action == "load":
+            load_container()
+        elif user_action == "unload":
+            unload_container()
+        else:
+            messagebox.showerror("Invalid Action", "Please enter 'load' or 'unload'")
 
+    submit_action_button = tk.Button(root, text="Submit", command=handle_action)
+    submit_action_button.pack()
 
+def load_container():
+    global file
+    location_label = tk.Label(root, text="Enter the desired load location (e.g., 01,02):")
+    location_label.pack()
+    location_entry = tk.Entry(root)
+    location_entry.pack()
 
+    def handle_load():
+        location = location_entry.get().strip()
+        if location in file["Position"].values and file.loc[file["Position"] == location, "Container"].values[0] == "UNUSED":
+            container_name_label = tk.Label(root, text="Enter the container name:")
+            container_name_label.pack()
+            container_name_entry = tk.Entry(root)
+            container_name_entry.pack()
+
+            container_mass_label = tk.Label(root, text="Enter the container mass:")
+            container_mass_label.pack()
+            container_mass_entry = tk.Entry(root)
+            container_mass_entry.pack()
+
+            def finalize_load():
+                container_name = container_name_entry.get().strip()
+                container_mass = container_mass_entry.get().strip()
+                file.loc[file["Position"] == location, "Container"] = container_name
+                file.loc[file["Position"] == location, "Weight"] = container_mass
+                GUI()
+
+            finalize_button = tk.Button(root, text="Finalize Load", command=finalize_load)
+            finalize_button.pack()
+        else:
+            messagebox.showerror("Invalid Location", "The selected location is either not empty or invalid.")
+
+    load_button = tk.Button(root, text="Load Container", command=handle_load)
+    load_button.pack()
+
+def unload_container():
+    global file
+    location_label = tk.Label(root, text="Enter the desired unload location (e.g., 01,02):")
+    location_label.pack()
+    location_entry = tk.Entry(root)
+    location_entry.pack()
+
+    def handle_unload():
+        location = location_entry.get().strip()
+        if location in file["Position"].values and file.loc[file["Position"] == location, "Container"].values[0] != "UNUSED" and file.loc[file["Position"] == location, "Container"].values[0] != "NAN":
+            file.loc[file["Position"] == location, "Container"] = "UNUSED"
+            file.loc[file["Position"] == location, "Weight"] = "00000"
+            GUI()
+        else:
+            messagebox.showerror("Invalid Location", "The selected location is either empty or invalid.")
+
+    unload_button = tk.Button(root, text="Unload Container", command=handle_unload)
+    unload_button.pack()
 
 credentials_tab()
 root.title("Fragile Express")
