@@ -51,7 +51,7 @@ def open_manifest():
     with open(path, 'r') as m:
         
         manifest_file = m.read()
-    messagebox.showinfo("Manifest File", manifest_file)
+    #messagebox.showinfo("Manifest File", manifest_file)
 
     main_menu_tab()
         
@@ -117,7 +117,7 @@ def Balance_tab():
 
     file = load_manifest(path)
     
-    def GUI():
+    def GUI(file):
         global rr
 
         
@@ -157,13 +157,37 @@ def Balance_tab():
                 message.grid(padx=10,pady=10,row=rows,column=k)
 
             rows-=1
+    
+    
+    
+    file2 = load_manifest(process_manifest(path,output_file="balance.txt"))
+    GUI(file)
+    
 
+    def t():
+        rr.destroy()
+        #Load_unload_tab
+        button3.destroy()
+        global button4
+        global instructions
         
+        GUI(file2)
 
-    GUI()
+        instructions = tk.Text(root)
+        instructions.insert(tk.END,"Moving container Rations for US Army from [02,02] to [02,01] with weight 20")
+        instructions.pack(expand=True)
+        instructions.config(state="disabled",width=50,height=1,font=(30))
 
-    button3 = tk.Button(root,text="continue",height=5,width=15)
+        button4 = tk.Button(root,text="Finish",height=5,width=15,command=Load_unload_tab)
+        button4.pack(expand=True,side="top")
+
+
+    
+    button3 = tk.Button(root,text="continue",height=5,width=15,command=t)
     button3.pack(expand=True,side="top")
+
+
+    
 
 
     #Load_unload_tab()
@@ -178,9 +202,11 @@ def Balance_tab():
 
 
 def Load_unload_tab():
+
     timer_label.destroy()
-    button3.destroy()
+    button4.destroy()
     rr.destroy()
+    instructions.destroy()
 
     
 
