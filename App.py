@@ -176,7 +176,7 @@ def Balance_tab():
         instructions = tk.Text(root)
         instructions.insert(tk.END,"Moving container Rations for US Army from [02,02] to [02,01] with weight 20")
         instructions.pack(expand=True)
-        instructions.config(state="disabled",width=50,height=1,font=(30))
+        instructions.config(state="disabled",width=100,height=1,font=(30))
 
         button4 = tk.Button(root,text="Finish",height=5,width=15,command=Load_unload_tab)
         button4.pack(expand=True,side="top")
