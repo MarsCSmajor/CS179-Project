@@ -21,8 +21,6 @@ def credentials_tab():
     global credential
     global button
     global username
-
-    
         
     credential = tk.Label(root,text="Welcome back, provide credentials")
     credential.pack()
@@ -37,12 +35,8 @@ def credentials_tab():
         else: 
             messagebox.showerror("Login Failed","invalid credentials")
 
-    
-
     button = tk.Button(root,text="login",command=login)
     button.pack()
-
-
 
 def open_manifest(): 
 
@@ -65,15 +59,11 @@ def upload_manifest_tab():
     global upload_manifest
     global button2
 
-
-
     upload_manifest = tk.Label(root, text="Upload manifest")
     upload_manifest.pack()
 
     button2 = tk.Button(root,text="UPLOAD",command=open_manifest,height=10,width=40)
     button2.pack(expand=True)
-
-
 
 def main_menu_tab(): 
     upload_manifest.destroy()
@@ -153,21 +143,18 @@ def Balance_tab():
     button3.pack(expand=True,side="top")
 
 
-
-
-    #Load_unload_tab()
-
 def Load_unload_tab():
     global file
     global button3
     global timer_label
+
     msg.destroy()
     Balance.destroy()
     Load_unload.destroy()
 
     messagebox.showinfo("Info", "Ready to load/unload")
 
-    timer_label = tk.Label(root, text="estimated time remaining", padx=10, pady=5)
+    timer_label = tk.Label(root, text="Estimated time remaining", padx=10, pady=5)
     timer_label.pack()
 
     file = load_manifest(path)
@@ -190,59 +177,63 @@ def Load_unload_tab():
     submit_action_button = tk.Button(root, text="Submit", command=handle_action)
     submit_action_button.pack()
 
+# Validates the location and returns the container status.
+def validate_location(location):
+    matching_rows = file.loc[file["Position"] == location]
+    if not matching_rows.empty:
+        container_status = matching_rows["Container"].values[0]
+        return container_status
+    else:
+        return None
+
 def load_container():
     global file
-    location_label = tk.Label(root, text="Enter the desired load location (e.g., 01,02):")
+
+    location_label = tk.Label(root, text="Enter the desired load location (e.g., [01,02]):")
     location_label.pack()
     location_entry = tk.Entry(root)
     location_entry.pack()
 
     def handle_load():
         location = location_entry.get().strip()
-        if location in file["Position"].values and file.loc[file["Position"] == location, "Container"].values[0] == "UNUSED":
-            container_name_label = tk.Label(root, text="Enter the container name:")
-            container_name_label.pack()
-            container_name_entry = tk.Entry(root)
-            container_name_entry.pack()
+        container_status = validate_location(location)
 
-            container_mass_label = tk.Label(root, text="Enter the container mass:")
-            container_mass_label.pack()
-            container_mass_entry = tk.Entry(root)
-            container_mass_entry.pack()
+        if container_status:
+            if container_status == "UNUSED":
+                container_name_label = tk.Label(root, text="Enter the container name:")
+                container_name_label.pack()
+                container_name_entry = tk.Entry(root)
+                container_name_entry.pack()
 
-            def finalize_load():
-                container_name = container_name_entry.get().strip()
-                container_mass = container_mass_entry.get().strip()
-                file.loc[file["Position"] == location, "Container"] = container_name
-                file.loc[file["Position"] == location, "Weight"] = container_mass
-                GUI()
+                container_mass_label = tk.Label(root, text="Enter the container mass:")
+                container_mass_label.pack()
+                container_mass_entry = tk.Entry(root)
+                container_mass_entry.pack()
 
-            finalize_button = tk.Button(root, text="Finalize Load", command=finalize_load)
-            finalize_button.pack()
+                def finalize_load():
+                    container_name = container_name_entry.get().strip()
+                    container_mass = container_mass_entry.get().strip()
+                    file.loc[file["Position"] == location, "Container"] = container_name
+                    file.loc[file["Position"] == location, "Weight"] = container_mass
+
+                finalize_button = tk.Button(root, text="Finalize Load", command=finalize_load)
+                finalize_button.pack()
+            else:
+                messagebox.showerror("Invalid Location", f"Location is not UNUSED. Current status: {container_status}")
         else:
-            messagebox.showerror("Invalid Location", "The selected location is either not empty or invalid.")
+            messagebox.showerror("Invalid Location", f"No matching location found for: {location}")
 
     load_button = tk.Button(root, text="Load Container", command=handle_load)
     load_button.pack()
 
+
 def unload_container():
     global file
-    location_label = tk.Label(root, text="Enter the desired unload location (e.g., 01,02):")
+
+    location_label = tk.Label(root, text="Enter the desired unload location (e.g., [01,02]):")
     location_label.pack()
     location_entry = tk.Entry(root)
     location_entry.pack()
-
-    def handle_unload():
-        location = location_entry.get().strip()
-        if location in file["Position"].values and file.loc[file["Position"] == location, "Container"].values[0] != "UNUSED" and file.loc[file["Position"] == location, "Container"].values[0] != "NAN":
-            file.loc[file["Position"] == location, "Container"] = "UNUSED"
-            file.loc[file["Position"] == location, "Weight"] = "00000"
-            GUI()
-        else:
-            messagebox.showerror("Invalid Location", "The selected location is either empty or invalid.")
-
-    unload_button = tk.Button(root, text="Unload Container", command=handle_unload)
-    unload_button.pack()
 
 credentials_tab()
 root.title("Fragile Express")
