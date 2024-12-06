@@ -41,33 +41,51 @@ def credentials_tab():
 
 
 def open_manifest(): 
-
-    global manifest_file # Manifest file can be access anywhere in the program since is global
-
+    global manifest_file
     path = askopenfilename(filetypes=[("Text Files", "*.txt")])
-    with open(path, 'r') as m:
-        manifest_file = m.read()
-    messagebox.showinfo("Manifest File", manifest_file)
-
-    main_menu_tab()
-        
-  
+    if not path:
+        return
+    try:
+        with open(path, 'r') as m:
+            manifest_file = m.readlines()
+        print("Manifest Content:", manifest_file)
+        visualize_manifest(manifest_file)
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to load manifest: {e}")
 
 def visualize_manifest(manifest_lines):
-    manifest_grid = [["UNUSED" for _ in range(12)] for _ in range(8)]
+    rows, cols = 8, 12
+    manifest_grid = [["" for _ in range(cols)] for _ in range(rows)]
+    cell_colors = [["white" for _ in range(cols)] for _ in range(rows)]
+
     for line in manifest_lines:
         if line.strip():
             position, weight, label = line.strip().split(", ")
             row, col = map(int, position.strip("[]").split(","))
-            manifest_grid[row-1][col-1] = f"{label.strip()} ({weight.strip('{}')})"
+            label = label.strip()
+            manifest_grid[row-1][col-1] = label
+            if label.lower() == "unused":
+                cell_colors[row-1][col-1] = "black"
+
     grid_window = tk.Toplevel(root)
     grid_window.title("Manifest Visualization")
-    for r, row in enumerate(manifest_grid):
-        for c, cell in enumerate(row):
-            cell_label = tk.Label(grid_window, text=cell, borderwidth=1, relief="solid", width=15, height=2)
-            cell_label.grid(row=r, column=c)
-    tk.Button(grid_window, text="Close", command=grid_window.destroy).grid(row=9, column=0, columnspan=12)
 
+    for r in range(rows):
+        for c in range(cols):
+            cell_label = tk.Label(
+                grid_window,
+                text=manifest_grid[r][c],
+                borderwidth=1,
+                relief="solid",
+                width=10,
+                height=2,
+                bg=cell_colors[r][c],
+                fg="red" if manifest_grid[r][c] else "black"
+            )
+            cell_label.grid(row=r, column=c, padx=1, pady=1)
+
+    close_button = tk.Button(grid_window, text="Close", command=grid_window.destroy)
+    close_button.grid(row=rows, column=0, columnspan=cols, pady=10)
 
 
 def upload_manifest_tab():
