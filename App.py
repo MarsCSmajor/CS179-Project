@@ -3,7 +3,7 @@ import tkinter as tk
 from itertools import combinations
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename
-from _new_balance_alg import process_manifest,load_manifest
+from _new_balance_alg import process_manifest,load_manifest,list_moves,move_crate
 
 #https://docs.python.org/3/library/dialog.html#
 # For login, reference https://www.w3resource.com/python-exercises/tkinter/python-tkinter-basic-exercise-16.phpx
@@ -60,6 +60,7 @@ def open_manifest():
 
 
 def upload_manifest_tab():
+    
     credential.destroy()
     button.destroy()
     username.destroy()
@@ -160,13 +161,15 @@ def Balance_tab():
     
     
     
-    file2 = load_manifest(process_manifest(path,output_file="balance.txt"))
+    
+    process_manifest(path,output_file="balance.txt") # call the balance algorithm since list moves contains the steps and moves
     GUI(file)
     
+    
 
-    def t():
+    def t(file2,text ="",cmd=None):
         rr.destroy()
-        #Load_unload_tab
+        
         button3.destroy()
         global button4
         global instructions
@@ -174,40 +177,95 @@ def Balance_tab():
         GUI(file2)
 
         instructions = tk.Text(root)
-        instructions.insert(tk.END,"Moving container Rations for US Army from [02,02] to [02,01] with weight 20")
+        instructions.insert(tk.END,text)
         instructions.pack(expand=True)
         instructions.config(state="disabled",width=100,height=1,font=(30))
 
-        button4 = tk.Button(root,text="Finish",height=5,width=15,command=Load_unload_tab)
+        button4 = tk.Button(root,text="Finish",height=5,width=15,command=cmd)
         button4.pack(expand=True,side="top")
 
+    
+    
+
+
 
     
-    button3 = tk.Button(root,text="continue",height=5,width=15,command=t)
+    global cnt 
+    cnt =0
+    print(list_moves)
+    def move(): # MOVE might have some minor bugs 
+        global cnt
+        
+        button3.destroy()
+        
+        rr.destroy()
+
+
+        if list_moves: # if the steps are available
+        
+            
+            #move_crate(file,list_moves[cnt][0],list_moves[cnt][1],output_file="balance.txt")
+            if cnt < len(list_moves):
+                move_crate(file,list_moves[cnt][0],list_moves[cnt][1],output_file="balance.txt")
+
+                print(f'cnt {cnt} list {len(list_moves)}')
+                
+                if cnt+1 == len(list_moves):
+                    
+                    
+                    instructions.destroy()
+                    button4.destroy()
+                    button3.destroy()
+                    t(file2=load_manifest("balance.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}",cmd=None)
+
+
+                    messagebox.showinfo("Balance","congrats ship is balance")
+                    rr.destroy()
+
+                    trainsition_upload()    
+                else:
+                    t(file2=load_manifest("balance.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}",cmd=move)
+                
+                cnt +=1
+                
+
+    
+                
+                        
+            else:
+                button3.destroy()
+                timer_label.destroy()
+                button4.destroy()
+                instructions.destroy()
+                    #t(file2=load_manifest("balance.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}",cmd=trainsition_upload)
+                messagebox.showinfo("Balance Successful","already downloaded and sent to captain")
+        
+        else: # if the steps was empty,the program knows that it is balance and no need to rebalance it once again
+            messagebox.showwarning("Warning","Manifest is already balance. No need of rebalancing")
+            trainsition_upload()
+            
+
+
+
+    def trainsition_upload(): # properly destroys the objects of the frame. Since global is used in a function that has sub functions, is not defined outside
+        button3.destroy()
+        timer_label.destroy()
+        button4.destroy()
+        rr.destroy()
+        list_moves.clear()
+        instructions.destroy()
+        upload_manifest_tab()
+        
+            
+
+
+    button3 = tk.Button(root,text="Continue",height=5,width=15,command=move)
     button3.pack(expand=True,side="top")
-
-
-    
-
-
-    #Load_unload_tab()
-
-
-
-
-    
-
-    
 
 
 
 def Load_unload_tab():
-
-    timer_label.destroy()
-    button4.destroy()
-    rr.destroy()
-    instructions.destroy()
-
+    
     
 
     
