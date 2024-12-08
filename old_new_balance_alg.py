@@ -94,6 +94,6 @@ def process_manifest(file_path, output_file):
     save_manifest(balanced_manifest, output_file)
 
 if __name__ == "__main__":
-    input_file = "case5.txt"
-    output_file = "balanced_case5.txt"
+    input_file = "case4.txt"
+    output_file = "balanced_case4.txt"
     process_manifest(input_file, output_file)
