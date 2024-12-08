@@ -5,6 +5,8 @@ from tkinter import messagebox,filedialog
 from tkinter.filedialog import askopenfilename
 from _new_balance_alg import process_manifest,load_manifest,list_moves,move_crate,save_manifest
 
+import os
+
 #https://docs.python.org/3/library/dialog.html#
 # For login, reference https://www.w3resource.com/python-exercises/tkinter/python-tkinter-basic-exercise-16.phpx
 
@@ -117,6 +119,7 @@ def Balance_tab():
     
 
     file = load_manifest(path)
+    rename = os.path.splitext(os.path.basename(path))[0] # to get correct format like case1OUTBOUND.txt
     
     def GUI(file):
         global rr
@@ -162,7 +165,7 @@ def Balance_tab():
     
     
     
-    process_manifest(path,output_file="balance.txt") # call the balance algorithm since list moves contains the steps and moves
+    process_manifest(path,output_file=rename+"OUTBOUND.txt") # call the balance algorithm since list moves contains the steps and moves
     GUI(file)
     
     
@@ -206,7 +209,7 @@ def Balance_tab():
             
             #move_crate(file,list_moves[cnt][0],list_moves[cnt][1],output_file="balance.txt")
             if cnt < len(list_moves):
-                move_crate(file,list_moves[cnt][0],list_moves[cnt][1],output_file="balance.txt")
+                move_crate(file,list_moves[cnt][0],list_moves[cnt][1],output_file=rename+"OUTBOUND.txt")
 
                 print(f'cnt {cnt} list {len(list_moves)}')
                 
@@ -216,7 +219,7 @@ def Balance_tab():
                     instructions.destroy()
                     button4.destroy()
                     button3.destroy()
-                    t(file2=load_manifest("balance.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}",cmd=None)
+                    t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}",cmd=None)
 
 
                     messagebox.showinfo("Balance","congrats ship is balance")
@@ -224,7 +227,7 @@ def Balance_tab():
 
                     trainsition_upload()    
                 else:
-                    t(file2=load_manifest("balance.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}",cmd=move)
+                    t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}",cmd=move)
                 
                 cnt +=1
                 
@@ -237,8 +240,12 @@ def Balance_tab():
                 timer_label.destroy()
                 button4.destroy()
                 instructions.destroy()
-                    #t(file2=load_manifest("balance.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}",cmd=trainsition_upload)
+                    
                 messagebox.showinfo("Balance Successful","already downloaded and sent to captain")
+
+
+
+                
         
         else: # if the steps was empty,the program knows that it is balance and no need to rebalance it once again
             messagebox.showwarning("Warning","Manifest is already balance. No need of rebalancing")
