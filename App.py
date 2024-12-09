@@ -46,13 +46,14 @@ def credentials_tab():
 
 
 def open_manifest(): 
-
+    global file
     global manifest_file # Manifest file can be access anywhere in the program since is global
     global path
     path = askopenfilename(filetypes=[("Text Files", "*.txt")])
     with open(path, 'r') as m:
         
         manifest_file = m.read()
+        file = load_manifest(path)
     #messagebox.showinfo("Manifest File", manifest_file)
 
     main_menu_tab()
@@ -326,7 +327,7 @@ def Load_unload_tab():
     timer_label = tk.Label(root, text="estimated time remanining", padx=10, pady=5)
     timer_label.pack()
 
-    file = load_manifest(path)
+    #file = load_manifest(path)
     GUI()
 
     def handle_back_action():
