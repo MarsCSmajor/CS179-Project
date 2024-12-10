@@ -24,8 +24,8 @@ def log_event(event):
 root = tk.Tk()
 
 #dataset = ["root"]
-dataset = ["Micheal","Gabriel", "Owner"] #testing
-
+#dataset = ["Micheal","Gabriel", "Owner"] #testing
+dataset = [""]
 def credentials_tab():
 
     global credential
@@ -70,10 +70,10 @@ def open_manifest():
         file = load_manifest(path)
         container_count = file[(file['Container'] != "NAN") & (file["Container"] != "UNUSED")]['Container'].nunique() # counts the number of containers in the manifest
 
-    log_event(f"{os.path.basename(path)} is oppened, there are {container_count} containers") # saves the information in the log file    
+    log_event(f"Manifest {os.path.basename(path)} is oppened, there are {container_count} containers") # saves the information in the log file    
 
     #messagebox.showinfo("Manifest File", manifest_file)
-
+    
     main_menu_tab()
         
   
@@ -90,7 +90,7 @@ def upload_manifest_tab():
     global button2
 
 
-
+    list_moves.clear()
     upload_manifest = tk.Label(root, text="Upload manifest")
     upload_manifest.pack()
 
@@ -130,7 +130,7 @@ def Balance_tab():
     Balance.destroy()
     Load_unload.destroy()
 
-    messagebox.showinfo("Info","Ready to balance")
+    #messagebox.showinfo("Info","Ready to balance")
 
     timer_label = tk.Label(root, text="estimated time remanining",padx=10,pady=5)
     timer_label.pack()
@@ -210,17 +210,20 @@ def Balance_tab():
     
 
 
-
     
+    global distance
+    distance =4
     global cnt 
     cnt =0
     print(list_moves)
     def move(): # MOVE might have some minor bugs 
         global cnt
+        global distance
         
-        button3.destroy()
-        
-        rr.destroy()
+        #button3.destroy()
+        for widget in root.winfo_children():
+            widget.destroy()
+        #rr.destroy()
 
 
         if list_moves: # if the steps are available
@@ -235,18 +238,24 @@ def Balance_tab():
                 if cnt+1 == len(list_moves):
                     
                     
-                    instructions.destroy()
-                    button4.destroy()
-                    button3.destroy()
-                    t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}",cmd=None)
+                    # instructions.destroy()
+                    # button4.destroy()
+                    # button3.destroy()
+                    for widget in root.winfo_children():
+                        widget.destroy()
+                        
+                    distance += abs(list_moves[cnt][1][0] - list_moves[cnt][0][0]) + abs(list_moves[cnt][1][1] - list_moves[cnt][0][1])
+                    t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]} Est time {distance} minutes",cmd=None)
 
 
                     messagebox.showinfo("Balance","congrats ship is balance")
-                    rr.destroy()
+                    #rr.destroy()
 
                     trainsition_upload()    
                 else:
-                    t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}",cmd=move)
+                    distance += abs(list_moves[cnt][1][0] - list_moves[cnt][0][0]) + abs(list_moves[cnt][1][1] - list_moves[cnt][0][1])
+
+                    t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]} Est time: {distance} minutes",cmd=move)
                 
                 cnt +=1
                 
@@ -255,10 +264,13 @@ def Balance_tab():
                 
                         
             else:
-                button3.destroy()
-                timer_label.destroy()
-                button4.destroy()
-                instructions.destroy()
+                # button3.destroy()
+                # timer_label.destroy()
+                # button4.destroy()
+                # instructions.destroy()
+                for widget in root.winfo_children():
+                    widget.destroy()
+                list_moves.clear()
                     
                 messagebox.showinfo("Balance Successful","already downloaded and sent to captain")
 
@@ -274,12 +286,14 @@ def Balance_tab():
 
 
     def trainsition_upload(): # properly destroys the objects of the frame. Since global is used in a function that has sub functions, is not defined outside
-        button3.destroy()
-        timer_label.destroy()
-        button4.destroy()
-        rr.destroy()
-        list_moves.clear()
-        instructions.destroy()
+        # button3.destroy()
+        # timer_label.destroy()
+        # button4.destroy()
+        # rr.destroy()
+        # list_moves.clear()
+        # instructions.destroy()
+        for widget in root.winfo_children():
+            widget.destroy()
         upload_manifest_tab()
         
             
