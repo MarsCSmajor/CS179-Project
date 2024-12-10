@@ -1,7 +1,3 @@
-# This code currently:
-    # correctly identify all blocking crates
-    # correctly move the blocking crates 
-
 import pandas as pd
 from itertools import combinations
 import re
@@ -43,8 +39,11 @@ def move_crate(manifest, from_pos, to_pos, output_file):
     print(f"Moving container {container} from {manifest.loc[from_index, 'Position']} to {manifest.loc[to_index, 'Position']} with weight {weight}")
 
     manifest.loc[to_index, 'Weight'] = f"{{{str(weight).zfill(5)}}}"
+    manifest.loc[to_index, 'Weight_Int'] = weight  
     manifest.loc[to_index, 'Container'] = container
+
     manifest.loc[from_index, 'Weight'] = '{00000}'
+    manifest.loc[from_index, 'Weight_Int'] = 0 
     manifest.loc[from_index, 'Container'] = 'UNUSED'
 
     # Save after each move
@@ -78,7 +77,7 @@ def clear_path(manifest, target_position, output_file):
         for _, slot in unused_slots.iterrows():
             slot_pos = (slot['Row'], slot['Col'])
             distance = manhattan_distance(blocking_pos, slot_pos)
-            if distance < min_distance:
+            if slot_pos[0] <= blocking_pos[0] and distance < min_distance: 
                 min_distance = distance
                 best_slot = slot_pos
         
@@ -177,6 +176,6 @@ def process_manifest(file_path, output_file):
     print(f"Left Weight: {left_weight}, Right Weight: {right_weight}")
 
 if __name__ == "__main__":
-    input_file = "case6.txt"
-    output_file = "balanced_case6.txt"
+    input_file = "1.txt"
+    output_file = "balanced_1.txt"
     process_manifest(input_file, output_file)
