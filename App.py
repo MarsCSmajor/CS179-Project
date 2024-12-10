@@ -6,6 +6,15 @@ from tkinter.filedialog import askopenfilename
 from _new_balance_alg import process_manifest,load_manifest,list_moves,move_crate,save_manifest
 
 import os
+from datetime import datetime
+
+
+LOG = "KeoghsPort2024.txt" # Brent's log function
+def log_event(event):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    with open(LOG, "a") as log: 
+        log.write(f"{timestamp}: {event}\n")
 
 #https://docs.python.org/3/library/dialog.html#
 # For login, reference https://www.w3resource.com/python-exercises/tkinter/python-tkinter-basic-exercise-16.phpx
@@ -15,7 +24,7 @@ import os
 root = tk.Tk()
 
 #dataset = ["root"]
-dataset = [""]
+dataset = ["Micheal","Gabriel", "Owner"] #testing
 
 def credentials_tab():
 
@@ -34,7 +43,12 @@ def credentials_tab():
     
     def login():
         if username.get() in dataset: 
+            name = username.get()
+            log_event(f"{name} signs in")
             upload_manifest_tab()
+
+
+
         else: 
             messagebox.showerror("Login Failed","invalid credentials")
 
@@ -54,6 +68,10 @@ def open_manifest():
         
         manifest_file = m.read()
         file = load_manifest(path)
+        container_count = file[(file['Container'] != "NAN") & (file["Container"] != "UNUSED")]['Container'].nunique() # counts the number of containers in the manifest
+
+    log_event(f"{os.path.basename(path)} is oppened, there are {container_count} containers") # saves the information in the log file    
+
     #messagebox.showinfo("Manifest File", manifest_file)
 
     main_menu_tab()
@@ -418,6 +436,9 @@ def load_container():
                     container_mass = container_mass_entry.get().strip()
                     file.loc[file["Position"] == location, "Container"] = container_name
                     file.loc[file["Position"] == location, "Weight"] = container_mass
+
+                    log_event(f"'{container_name}' container is loaded") # when a valid container is loaded in manifest, keep a log record of it
+
                     clear_all_widgest(root)
                     Load_unload_tab()
 
@@ -445,6 +466,9 @@ def unload_container():
 
         if container_status:
             if container_status != "UNUSED" and container_status != "NAN":
+
+                log_event(f"'{container_status}' container is offloaded") # keeps log record of the container that was unloaded
+
                 file.loc[file["Position"] == location, "Container"] = "UNUSED"
                 file.loc[file["Position"] == location, "Weight"] = "{00000}"
                 clear_all_widgest(root)
