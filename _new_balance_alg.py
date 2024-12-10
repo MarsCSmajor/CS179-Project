@@ -35,12 +35,11 @@ def manhattan_distance(pos1, pos2):
     return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
 
 # function to move crates
+
 def move_crate(manifest, from_pos, to_pos, output_file):
     from_index = manifest[(manifest['Row'] == from_pos[0]) & (manifest['Col'] == from_pos[1])].index[0]
-
-    # Check if the source container is UNUSED before proceeding
     if manifest.loc[from_index, 'Container'] == 'UNUSED':
-        return manifest  # Don't proceed with the move
+        return manifest  
 
     to_index = manifest[(manifest['Row'] == to_pos[0]) & (manifest['Col'] == to_pos[1])].index[0]
 
@@ -48,15 +47,17 @@ def move_crate(manifest, from_pos, to_pos, output_file):
     weight = manifest.loc[from_index, 'Weight_Int']
 
     print(f"Moving container {container} from {manifest.loc[from_index, 'Position']} to {manifest.loc[to_index, 'Position']} with weight {weight}")
-    
-    
 
     manifest.loc[to_index, 'Weight'] = f"{{{str(weight).zfill(5)}}}"
+    manifest.loc[to_index, 'Weight_Int'] = weight  
     manifest.loc[to_index, 'Container'] = container
+
     manifest.loc[from_index, 'Weight'] = '{00000}'
+    manifest.loc[from_index, 'Weight_Int'] = 0 
     manifest.loc[from_index, 'Container'] = 'UNUSED'
 
-    save_manifest(manifest, output_file)  # Save after each move
+    # Save after each move
+    save_manifest(manifest, output_file)  
 
     return manifest
 
@@ -87,7 +88,8 @@ def clear_path(manifest, target_position, output_file):
         for _, slot in unused_slots.iterrows():
             slot_pos = (slot['Row'], slot['Col'])
             distance = manhattan_distance(blocking_pos, slot_pos)
-            if distance < min_distance:
+
+            if slot_pos[0] <= blocking_pos[0] and distance < min_distance: 
                 min_distance = distance
                 best_slot = slot_pos
         
