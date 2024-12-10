@@ -122,7 +122,8 @@ def main_menu_tab():
 
 
 def Balance_tab():
-
+    global count
+    count =0
     global file
     global button3
     global timer_label
@@ -132,7 +133,7 @@ def Balance_tab():
 
     #messagebox.showinfo("Info","Ready to balance")
 
-    timer_label = tk.Label(root, text="estimated time remanining",padx=10,pady=5)
+    timer_label = tk.Label(root, text="Balance Feature",padx=10,pady=5)
     timer_label.pack()
 
     
@@ -189,12 +190,13 @@ def Balance_tab():
     
     
 
-    def t(file2,text ="",cmd=None):
+    def t(file2,text ="",cmd=None,time=""):
         rr.destroy()
         
         button3.destroy()
         global button4
         global instructions
+        global estimated_time
         
         GUI(file2)
 
@@ -203,22 +205,29 @@ def Balance_tab():
         instructions.pack(expand=True)
         instructions.config(state="disabled",width=100,height=1,font=(30))
 
-        button4 = tk.Button(root,text="Finish",height=5,width=15,command=cmd)
+        estimated_time = tk.Text(root)
+        estimated_time.insert(tk.END,time)
+        estimated_time.pack(expand=True)
+        estimated_time.config(state="disabled",width=100,height=1,font=(30))
+
+        button4 = tk.Button(root,text="Next",height=5,width=15,command=cmd)
         button4.pack(expand=True,side="top")
 
     
     
 
 
-    
+    # global count
+    # count =0
     global distance
-    distance =4
+    distance =0
     global cnt 
     cnt =0
     print(list_moves)
     def move(): # MOVE might have some minor bugs 
         global cnt
         global distance
+        global count
         
         #button3.destroy()
         for widget in root.winfo_children():
@@ -244,18 +253,21 @@ def Balance_tab():
                     for widget in root.winfo_children():
                         widget.destroy()
                         
-                    distance += abs(list_moves[cnt][1][0] - list_moves[cnt][0][0]) + abs(list_moves[cnt][1][1] - list_moves[cnt][0][1])
-                    t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]} Est time {distance} minutes",cmd=None)
+                    distance = abs(list_moves[cnt][1][0] - list_moves[cnt][0][0]) + abs(list_moves[cnt][1][1] - list_moves[cnt][0][1])
+                    
+                    count+=distance
+                    t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]} Est time {distance} minutes",cmd=None,time=f"Total Time {count} minutes")
 
-
-                    messagebox.showinfo("Balance","congrats ship is balance")
+                       
+                    messagebox.showinfo("Ship is Balanced",f"Total time: {count}")
                     #rr.destroy()
 
                     trainsition_upload()    
                 else:
-                    distance += abs(list_moves[cnt][1][0] - list_moves[cnt][0][0]) + abs(list_moves[cnt][1][1] - list_moves[cnt][0][1])
+                    distance = abs(list_moves[cnt][1][0] - list_moves[cnt][0][0]) + abs(list_moves[cnt][1][1] - list_moves[cnt][0][1])
+                    count+=distance
 
-                    t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]} Est time: {distance} minutes",cmd=move)
+                    t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]} Est time: {distance} minutes",cmd=move,time=f"Total Time {count} minutes")
                 
                 cnt +=1
                 

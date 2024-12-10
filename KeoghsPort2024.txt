@@ -1,7 +1,0 @@
-2024-12-09 19:38:30: Gabriel signs in
-2024-12-09 19:38:44: Manifest case6.txt is oppened, there are 4
-2024-12-09 19:40:35: Owner signs in
-2024-12-09 19:40:37: Manifest case6.txt is oppened, there are 4 containers
-2024-12-09 19:42:53: Owner signs in
-2024-12-09 19:42:57: Manifest case6.txt is oppened, there are 4 containers
-2024-12-09 19:43:23: Target is loaded
