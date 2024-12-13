@@ -1,0 +1,29 @@
+2024-12-12 22:30:38: Gabriel signs in
+2024-12-12 22:30:40: Manifest case6.txt is oppened, there are 4 containers
+2024-12-12 22:31:58: Gabriel signs in
+2024-12-12 22:32:00: Manifest case6.txt is oppened, there are 4 containers
+2024-12-12 22:37:30: Gabriel signs in
+2024-12-12 22:39:22: Gabriel signs in
+2024-12-12 22:39:35: Manifest ManifestForBalance.txt is oppened, there are 4 containers
+2024-12-12 22:39:50: Moving container(2, 2) to  (2, 1)
+2024-12-12 22:40:06: Moving container(1, 2) to  (1, 7)
+2024-12-12 22:40:54: Manifest ManifestForTransfer.txt is oppened, there are 4 containers
+2024-12-12 22:42:05: 'Nat' container is loaded
+2024-12-12 22:44:39: Gabriel signs in
+2024-12-12 22:44:59: Manifest ManifestForTransfer.txt is oppened, there are 4 containers
+2024-12-12 22:47:34: Gabriel signs in
+2024-12-12 22:47:55: Manifest ManifestForTransfer.txt is oppened, there are 4 containers
+2024-12-12 22:48:46: Jay signs in
+2024-12-12 22:48:58: Manifest ManifestForTransfer.txt is oppened, there are 4 containers
+2024-12-12 22:49:34: Michael signs in
+2024-12-12 22:49:59: Manifest ManifestForBalance.txt is oppened, there are 4 containers
+2024-12-12 22:50:02: Moving container(2, 2) to  (2, 1)
+2024-12-12 22:50:03: Moving container(1, 2) to  (1, 7)
+2024-12-12 22:54:24: Jay signs in
+2024-12-12 22:54:37: Manifest ManifestForBalance.txt is oppened, there are 4 containers
+2024-12-12 22:54:54: Moving container(2, 2) to  (2, 1)
+2024-12-12 22:55:20: Moving container(1, 2) to  (1, 7)
+2024-12-12 22:56:09: Manifest ManifestForTransfer.txt is oppened, there are 4 containers
+2024-12-12 22:57:18: 'Nat' container is loaded
+2024-12-12 22:58:26: 'Batons' container is offloaded
+2024-12-12 22:58:59: 'Catfish' container is offloaded
