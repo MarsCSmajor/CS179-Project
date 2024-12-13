@@ -24,8 +24,8 @@ def log_event(event):
 root = tk.Tk()
 
 #dataset = ["root"]
-#dataset = ["Micheal","Gabriel", "Owner"] #testing
-dataset = [""]
+dataset = ["Michael","Gabriel", "Jay"] #testing
+#dataset = [""]
 def credentials_tab():
 
     global credential
@@ -258,7 +258,8 @@ def Balance_tab():
                     count+=distance
                     t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]} Est time {distance} minutes",cmd=None,time=f"Total Time {count} minutes")
 
-                       
+                    log_event(f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}")
+
                     messagebox.showinfo("Ship is Balanced",f"Total time: {count}")
                     #rr.destroy()
 
@@ -268,6 +269,7 @@ def Balance_tab():
                     count+=distance
 
                     t(file2=load_manifest(rename+"OUTBOUND.txt"),text=f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]} Est time: {distance} minutes",cmd=move,time=f"Total Time {count} minutes")
+                    log_event(f"Moving container{list_moves[cnt][0]} to  {list_moves[cnt][1]}")
                 
                 cnt +=1
                 
@@ -379,7 +381,7 @@ def Load_unload_tab():
         upload_manifest_tab()
 
     def handle_done_action():
-        file_path = filedialog.asksaveasfilename(defaultextension=".txt", initialfile="testOUTBOUND.txt", filetypes=[("Text Files", "*.txt")])
+        file_path = filedialog.asksaveasfilename(defaultextension=".txt", initialfile=os.path.splitext(os.path.basename(path))[0]+"OUTBOUND", filetypes=[("Text Files", "*.txt")])
         if file_path:
             save_manifest(file,file_path)
             clear_all_widgest(root)
